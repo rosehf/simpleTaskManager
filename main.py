@@ -1,6 +1,6 @@
 # Cadets Hayden Rose and Siripat Kotipapa
 # CIS 302 - Simple Linux Task Manager
-# Help Recieved: Github Copilot for regex explaination, Canvas resources 
+# Help Recieved: AI for questions about proc files, google for python syntax, Canvas resources 
 
 import time
 import re
@@ -30,14 +30,45 @@ def get_static_info():
         print(RESET + "Uptime:" + GREEN, re.search(r'(\d+\.\d+)', uptime).group(1))
         
     
-    
-
-
-
 
 # Dynamic Montioring
+#    Get percentage of time spend in user mode system mode and idle *STAT*
+#    Amount and percentage of available memory *MEMINFO*
+#    The rate of disk read/write in the system *DISKSTATS*
+#    The rate of context switches in the kernel *STAT*
+#    The rate of process creations in the system *STAT*
 
-#def monitor():
-    
+def monitor():
+    print("\n" * 100)  # Clear screen
+    print(RED + "DYNAMIC SYSTEM MONITOR " + RESET)
+    print("Press Ctrl+C to stop monitoring\n")
 
-get_static_info()
+    print("CPU percentages\n\tUser Mode: \n\tSystem Mode: \n\tIdle: ")
+    print("Memory\n\tAvailable Memory: ")
+    print("Disk I/O\n\tRead Rate: \n\tWrite Rate: ")
+    print("Context Switches Rate: ")
+    print("Process Creation Rate: ")
+
+    while True:
+        with open("/proc/stat", 'r') as stat:
+            cpu_line = stat.readline()
+            print(cpu_line)
+
+        with open("/proc/meminfo", 'r') as meminfo:
+            print()
+        
+        with open("/proc/diskstats", 'r') as diskstats:
+            print()
+        
+        time.sleep(5)
+
+
+
+   
+        
+
+
+
+
+
+monitor()
