@@ -15,11 +15,11 @@ def get_static_info():
 
     with open("/proc/cpuinfo", 'r') as file:
         cpuinfo = file.read()
-        print("Processor Type:" + GREEN, re.search(r'model name\s+:\s+(.+)', cpuinfo).group(1))
+        print(f"Processor Type:{GREEN}", re.search(r'model name\s+:\s+(.+)', cpuinfo).group(1))
     
     with open("/proc/version", 'r') as file:
         version = file.read()
-        print(RESET + "Kernel Version:" + GREEN, re.search(r'Linux version\s+(.+?)\s+', version).group(1))
+        print(f"{RESET}Kernel Version:{GREEN}", re.search(r'Linux version\s+(.+?)\s+', version).group(1))
 
     with open("/proc/meminfo", 'r') as file:
         meminfo = file.read()
@@ -27,7 +27,7 @@ def get_static_info():
 
     with open("/proc/uptime", 'r') as file:
         uptime = file.read()
-        print(RESET + "Uptime:" + GREEN, re.search(r'(\d+\.\d+)', uptime).group(1))
+        print(f"{RESET}Uptime:{GREEN}", re.search(r'(\d+\.\d+)', uptime).group(1))
         
     
 
