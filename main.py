@@ -23,7 +23,7 @@ def get_static_info():
 
     with open("/proc/meminfo", 'r') as file:
         meminfo = file.read()
-        print(RESET + "Total Memory:" + GREEN, re.search(r'MemTotal:\s+(\d+)', meminfo).group(1))
+        print(f"{RESET}Total Memory:{GREEN}", re.search(r'MemTotal:\s+(\d+)', meminfo).group(1))
 
     with open("/proc/uptime", 'r') as file:
         uptime = file.read()
@@ -51,8 +51,21 @@ def monitor():
 
     while True:
         with open("/proc/stat", 'r') as stat:
-            cpu_line = stat.readline()
-            print(cpu_line)
+            line = stat.readline().strip() # We use strip here to remove any whitespace around it
+            fields = line.split()
+            
+            user_time = int(fields[1]) + int(fields[2])
+            system_time = int(fields[3])
+            idle_time = int(fields[4])
+            total_time = user_time + system_time + idle_time
+
+            user_percentage = (user_time / total_time) * 100
+            system_percentage = (system_time / total_time) * 100
+            idle_percentage = (idle_time / total_time) * 100
+
+            print("\033[1A" * 10, end="")  # Move cursor up to overwrite previous output
+            print(f"CPU percentages\n\tUser Mode: {GREEN}{user_percentage:.2f}%{RESET}\n\tSystem Mode: {GREEN}{system_percentage:.2f}%{RESET}\n\tIdle: {GREEN}{idle_percentage:.2f}%{RESET}")
+            
 
         with open("/proc/meminfo", 'r') as meminfo:
             print()
