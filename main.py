@@ -79,14 +79,16 @@ def monitor():
                 if line.startswith("ctxt"):
                     ctxt_fields = line.split()
                     ctxt_switches = int(ctxt_fields[1])
-                    prev_ctxt_sw = ctxt_switches;
+                    
                     if prev_ctxt_sw != 0:
                         ctxt_switches -= prev_ctxt_sw
-                
+                        print("\033[2A" , end="")  # Move cursor up to overwrite previous output
+                        print(f"Context Switches Rate: {GREEN}{ctxt_switches}{RESET}")
+                        print("\033[2B" , end="") # Return cursor to original position
                         
-                    print("\033[2A" , end="")  # Move cursor up to overwrite previous output
-                    print(f"Context Switches Rate: {GREEN}{ctxt_switches}{RESET}")
-                    print("\033[2B" , end="") # Return cursor to original position
+                    else:
+                        prev_ctxt_sw = int(ctxt_fields[1])
+                        
                     break
 
             for line in stat:
