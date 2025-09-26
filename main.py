@@ -111,9 +111,9 @@ def monitor():
                     if line.startswith("MemAvailable:"):
                         mem_fields = line.split()
                         available_memory = int(mem_fields[1])  # in KB
-                        print("\033[8A" , end="")  # Move cursor up to overwrite previous output
+                        print("\033[7A" , end="")  # Move cursor up to overwrite previous output
                         print(f"Memory\n\tAvailable Memory: {GREEN}{available_memory} KB{RESET}\033[K")
-                        print("\033[8B" , end="") # Return cursor to original position
+                        print("\033[7B" , end="") # Return cursor to original position
                         break
             
             with open("/proc/diskstats", 'r') as diskstats:
