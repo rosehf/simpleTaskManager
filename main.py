@@ -82,9 +82,9 @@ def monitor():
                     if prev_ctxt_sw != 0:
                         ctxt_switches -= prev_ctxt_sw
                         
-                    print("\033[3A" , end="")  # Move cursor up to overwrite previous output
+                    print("\033[2A" , end="")  # Move cursor up to overwrite previous output
                     print(f"Context Switches Rate: {GREEN}{ctxt_switches/refresh_rate}{RESET}")
-                    print("\033[3B" , end="") # Return cursor to original position
+                    print("\033[2B" , end="") # Return cursor to original position
                     break
 
             for line in stat:
@@ -93,7 +93,6 @@ def monitor():
                     proc_creations = int(proc_fields[1])
                     if prev_proc_cre != 0:
                         proc_creations -= prev_proc_cre
-                    #print(f"Process Creation Rate: {GREEN}{proc_creations/refresh_rate}{RESET}")
                     break
 
             
