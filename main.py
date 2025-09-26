@@ -107,14 +107,20 @@ def monitor():
                 
 
             with open("/proc/meminfo", 'r') as meminfo:
+                available_memory
                 for line in meminfo:
                     if line.startswith("MemAvailable:"):
                         mem_fields = line.split()
-                        available_memory = int(mem_fields[1])  # in KB
-                        print("\033[7A" , end="")  # Move cursor up to overwrite previous output
-                        print(f"Memory\n\tAvailable Memory: {GREEN}{available_memory} KB{RESET}\033[K")
-                        print("\033[7B" , end="") # Return cursor to original position
-                        break
+                        available_memory = int(mem_fields[1])
+                    if line.startswith("MemTotal:"):
+                        total_fields = line.split()
+                        total_memory = int(total_fields[1])
+                    
+                print("\033[6A" , end="")  # Move cursor up to overwrite previous output
+                print(f"Memory\n\tAvailable Memory: {GREEN}{available_memory} kB ({(available_memory/total_memory)*100:.2f}%){RESET}\033[K")
+                print("\033[6B" , end="") # Return cursor to original position
+                break
+
             
             with open("/proc/diskstats", 'r') as diskstats:
                 for line in diskstats:
