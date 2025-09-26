@@ -79,11 +79,13 @@ def monitor():
                 if line.startswith("ctxt"):
                     ctxt_fields = line.split()
                     ctxt_switches = int(ctxt_fields[1])
+                    prev_ctxt_sw = ctxt_switches;
                     if prev_ctxt_sw != 0:
                         ctxt_switches -= prev_ctxt_sw
+                
                         
                     print("\033[2A" , end="")  # Move cursor up to overwrite previous output
-                    print(f"Context Switches Rate: {GREEN}{ctxt_switches/refresh_rate}{RESET}")
+                    print(f"Context Switches Rate: {GREEN}{ctxt_switches}{RESET}")
                     print("\033[2B" , end="") # Return cursor to original position
                     break
 
