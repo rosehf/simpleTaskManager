@@ -83,7 +83,7 @@ def monitor():
                         if prev_ctxt_sw != 0:
                             ctxt_switches -= prev_ctxt_sw
                             print("\033[2A" , end="")  # Move cursor up to overwrite previous output
-                            print(f"Context Switches Rate: {GREEN}{ctxt_switches/refresh_rate:.2f}{RESET}\033[K")
+                            print(f"Context Switches Rate: {GREEN}{ctxt_switches/refresh_rate:.2f} /s{RESET}\033[K")
                             print("\033[2B" , end="") # Return cursor to original position
                             
                         prev_ctxt_sw = int(ctxt_fields[1])
@@ -98,7 +98,7 @@ def monitor():
                         if prev_proc_cre != 0:
                             proc_creations -= prev_proc_cre
                             print("\033[1A" , end="")  # Move cursor up to overwrite previous output
-                            print(f"Process Creation Rate: {GREEN}{proc_creations/refresh_rate:.2f}{RESET}\033[K")
+                            print(f"Process Creation Rate: {GREEN}{proc_creations/refresh_rate:.2f} /s{RESET}\033[K")
                             print("\033[1B" , end="") # Return cursor to original position
 
                         prev_proc_cre = int(proc_fields[1])
