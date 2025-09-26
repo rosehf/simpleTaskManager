@@ -32,13 +32,14 @@ def get_static_info():
     
 
 # Dynamic Montioring
-#    Get percentage of time spend in user mode system mode and idle *STAT*
+#    Get percentage of time spent in user mode system mode and idle *STAT*
 #    Amount and percentage of available memory *MEMINFO*
 #    The rate of disk read/write in the system *DISKSTATS*
 #    The rate of context switches in the kernel *STAT*
 #    The rate of process creations in the system *STAT*
 
 def monitor():
+    refresh_rate = 1  # seconds
     print("\n" * 100)  # Clear screen
     print(RED + "DYNAMIC SYSTEM MONITOR " + RESET)
     print("Press Ctrl+C to stop monitoring\n")
@@ -51,6 +52,8 @@ def monitor():
 
     while True:
         with open("/proc/stat", 'r') as stat:
+
+            # CPU % Info
             line = stat.readline().strip() # We use strip here to remove any whitespace around it
             fields = line.split()
             
@@ -65,6 +68,29 @@ def monitor():
 
             print("\033[11A" , end="")  # Move cursor up to overwrite previous output
             print(f"CPU percentages\n\tUser Mode: {GREEN}{user_percentage:.2f}%{RESET}\n\tSystem Mode: {GREEN}{system_percentage:.2f}%{RESET}\n\tIdle: {GREEN}{idle_percentage:.2f}%{RESET}")
+            print("\033[11B" , end="") # Return cursor to original position
+
+            # Context Switches
+            prev_ctxt_sw = 0
+            prev_proc_cre = 0
+            for line in stat:
+                if line.startswith("ctxt"):
+                    ctxt_fields = line.split()
+                    ctxt_switches = int(ctxt_fields[1])
+                    if prev_ctxt_sw != 0:
+                        ctxt_switches -= prev_ctxt_sw
+                    print(f"Context Switches Rate: {GREEN}{ctxt_switches/refresh_rate}{RESET}")
+                    break
+
+            for line in stat:
+                if line.startswith("processes"):
+                    proc_fields = line.split()
+                    proc_creations = int(proc_fields[1])
+                    if prev_proc_cre != 0:
+                        proc_creations -= prev_proc_cre
+                    print(f"Process Creation Rate: {GREEN}{proc_creations/refresh_rate}{RESET}")
+                    break
+
             
 
         with open("/proc/meminfo", 'r') as meminfo:
@@ -74,8 +100,8 @@ def monitor():
             print()
             
             
-        print("\033[11B" , end="")
-        time.sleep(1)
+        
+        time.sleep(refresh_rate)
 
 
 
