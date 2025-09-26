@@ -63,7 +63,7 @@ def monitor():
             system_percentage = (system_time / total_time) * 100
             idle_percentage = (idle_time / total_time) * 100
 
-            print("\033[1A" * 11, end="")  # Move cursor up to overwrite previous output
+            print("\033[11A" , end="")  # Move cursor up to overwrite previous output
             print(f"CPU percentages\n\tUser Mode: {GREEN}{user_percentage:.2f}%{RESET}\n\tSystem Mode: {GREEN}{system_percentage:.2f}%{RESET}\n\tIdle: {GREEN}{idle_percentage:.2f}%{RESET}")
             
 
@@ -72,8 +72,10 @@ def monitor():
         
         with open("/proc/diskstats", 'r') as diskstats:
             print()
-        
-        time.sleep(5)
+            
+            
+        print("\033[11B" , end="")
+        time.sleep(1)
 
 
 
