@@ -40,6 +40,9 @@ def get_static_info():
 
 def monitor():
     refresh_rate = 1  # seconds
+    prev_ctxt_sw = 0
+    prev_proc_cre = 0
+
     print("\n" * 100)  # Clear screen
     print(RED + "DYNAMIC SYSTEM MONITOR " + RESET)
     print("Press Ctrl+C to stop monitoring\n")
@@ -71,8 +74,7 @@ def monitor():
             print("\033[11B" , end="") # Return cursor to original position
 
             # Context Switches
-            prev_ctxt_sw = 0
-            prev_proc_cre = 0
+
             for line in stat:
                 if line.startswith("ctxt"):
                     ctxt_fields = line.split()
@@ -96,11 +98,12 @@ def monitor():
 
             
 
-        with open("/proc/meminfo", 'r') as meminfo:
-            print()
+        #with open("/proc/meminfo", 'r') as meminfo:
+            
+            #print()
         
-        with open("/proc/diskstats", 'r') as diskstats:
-            print()
+        #with open("/proc/diskstats", 'r') as diskstats:
+            #print()
             
             
         
