@@ -1,7 +1,8 @@
 # Cadets Hayden Rose and Siripat Kotipapa
 # CIS 302 - Simple Linux Task Manager
-# Help Recieved: AI for questions about proc files + general python programing, google for python syntax, Canvas resources 
+# Help Recieved: AI for menu system + questions about proc files + general python programing, google for python syntax, Canvas resources 
 
+import curses
 import time
 import re
 
@@ -151,12 +152,38 @@ def monitor():
         print("\nMonitoring stopped.") # Nice
 
 
-
+# Everything from here down was AI generated for the menu so it is cleaner
    
-        
+def menu(stdscr):
+    curses.curs_set(0)  # Hide cursor
+    options = ["Static Info", "Dynamic Monitor"]
+    current = 0
 
+    while True:
+        stdscr.clear()
+        stdscr.addstr(0, 0, "Select Mode (↑↓ and Enter):")
 
+        for i, option in enumerate(options):
+            if i == current:
+                stdscr.addstr(i+1, 0, f"> {option}", curses.A_REVERSE)  # highlight
+            else:
+                stdscr.addstr(i+1, 0, f"  {option}")
 
+        key = stdscr.getch()
 
+        if key == curses.KEY_UP and current > 0:
+            current -= 1
+        elif key == curses.KEY_DOWN and current < len(options) - 1:
+            current += 1
+        elif key in [10, 13]:  # Enter key
+            return current  # return selection index
 
-monitor()
+def main():
+    choice = curses.wrapper(menu)
+    if choice == 0:
+        get_static_info()
+    else:
+        monitor()
+
+if __name__ == "__main__":
+    main()
