@@ -86,9 +86,9 @@ def monitor():
                         print(f"Context Switches Rate: {GREEN}{ctxt_switches}{RESET}")
                         print("\033[2B" , end="") # Return cursor to original position
                         
-                    else:
-                        prev_ctxt_sw = int(ctxt_fields[1])
                         
+                    
+                    prev_ctxt_sw = int(ctxt_fields[1])
                     break
 
             for line in stat:
