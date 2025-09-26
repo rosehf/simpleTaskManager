@@ -119,9 +119,9 @@ def monitor():
                     if line.startswith("MemAvailable:"):
                         mem_fields = line.split()
                         available_memory = int(mem_fields[1])
-                        print("\033[6A" , end="")  # Move cursor up to overwrite previous output
+                        print("\033[7A" , end="")  # Move cursor up to overwrite previous output
                         print(f"Memory\n\tAvailable Memory: {GREEN}{available_memory} kB ({(available_memory/total_memory)*100:.2f}%){RESET}\033[K")
-                        print("\033[6B" , end="") # Return cursor to original position
+                        print("\033[7B" , end="") # Return cursor to original position
                         break
 
                     
