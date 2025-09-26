@@ -53,68 +53,71 @@ def monitor():
     print("Context Switches Rate: ")
     print("Process Creation Rate: ")
 
-    while True:
-        with open("/proc/stat", 'r') as stat:
+    try:
+        while True:
+            with open("/proc/stat", 'r') as stat:
 
-            # CPU % Info
-            line = stat.readline().strip() # We use strip here to remove any whitespace around it
-            fields = line.split()
-            
-            user_time = int(fields[1]) + int(fields[2])
-            system_time = int(fields[3])
-            idle_time = int(fields[4])
-            total_time = user_time + system_time + idle_time
+                # CPU % Info
+                line = stat.readline().strip() # We use strip here to remove any whitespace around it
+                fields = line.split()
+                
+                user_time = int(fields[1]) + int(fields[2])
+                system_time = int(fields[3])
+                idle_time = int(fields[4])
+                total_time = user_time + system_time + idle_time
 
-            user_percentage = (user_time / total_time) * 100
-            system_percentage = (system_time / total_time) * 100
-            idle_percentage = (idle_time / total_time) * 100
+                user_percentage = (user_time / total_time) * 100
+                system_percentage = (system_time / total_time) * 100
+                idle_percentage = (idle_time / total_time) * 100
 
-            print("\033[11A" , end="")  # Move cursor up to overwrite previous output
-            print(f"CPU percentages\n\tUser Mode: {GREEN}{user_percentage:.2f}%{RESET}\n\tSystem Mode: {GREEN}{system_percentage:.2f}%{RESET}\n\tIdle: {GREEN}{idle_percentage:.2f}%{RESET}")
-            print("\033[11B" , end="") # Return cursor to original position
+                print("\033[11A" , end="")  # Move cursor up to overwrite previous output
+                print(f"CPU percentages\n\tUser Mode: {GREEN}{user_percentage:.2f}%{RESET}\n\tSystem Mode: {GREEN}{system_percentage:.2f}%{RESET}\n\tIdle: {GREEN}{idle_percentage:.2f}%{RESET}")
+                print("\033[11B" , end="") # Return cursor to original position
 
-            # Context Switches
-            for line in stat:
-                if line.startswith("ctxt"):
-                    ctxt_fields = line.split()
-                    ctxt_switches = int(ctxt_fields[1])
-                    
-                    if prev_ctxt_sw != 0:
-                        ctxt_switches -= prev_ctxt_sw
-                        print("\033[2A" , end="")  # Move cursor up to overwrite previous output
-                        print(f"Context Switches Rate: {GREEN}{ctxt_switches/refresh_rate}{RESET}")
-                        print("\033[2B" , end="") # Return cursor to original position
+                # Context Switches
+                for line in stat:
+                    if line.startswith("ctxt"):
+                        ctxt_fields = line.split()
+                        ctxt_switches = int(ctxt_fields[1])
                         
-                    prev_ctxt_sw = int(ctxt_fields[1])
-                    break
+                        if prev_ctxt_sw != 0:
+                            ctxt_switches -= prev_ctxt_sw
+                            print("\033[2A" , end="")  # Move cursor up to overwrite previous output
+                            print(f"Context Switches Rate: {GREEN}{ctxt_switches/refresh_rate:.2f}{RESET}\033[K")
+                            print("\033[2B" , end="") # Return cursor to original position
+                            
+                        prev_ctxt_sw = int(ctxt_fields[1])
+                        break
 
 
-            # Process Creations
-            for line in stat:
-                if line.startswith("processes"):
-                    proc_fields = line.split()
-                    proc_creations = int(proc_fields[1])
-                    if prev_proc_cre != 0:
-                        proc_creations -= prev_proc_cre
-                        print("\033[1A" , end="")  # Move cursor up to overwrite previous output
-                        print(f"Process Creation Rate: {GREEN}{proc_creations/refresh_rate:.2f}{RESET}\033[K")
-                        print("\033[1B" , end="") # Return cursor to original position
+                # Process Creations
+                for line in stat:
+                    if line.startswith("processes"):
+                        proc_fields = line.split()
+                        proc_creations = int(proc_fields[1])
+                        if prev_proc_cre != 0:
+                            proc_creations -= prev_proc_cre
+                            print("\033[1A" , end="")  # Move cursor up to overwrite previous output
+                            print(f"Process Creation Rate: {GREEN}{proc_creations/refresh_rate:.2f}{RESET}\033[K")
+                            print("\033[1B" , end="") # Return cursor to original position
 
-                    prev_proc_cre = int(proc_fields[1])
-                    break
+                        prev_proc_cre = int(proc_fields[1])
+                        break
 
+                
+
+            #with open("/proc/meminfo", 'r') as meminfo:
+                
+                #print()
             
-
-        #with open("/proc/meminfo", 'r') as meminfo:
+            #with open("/proc/diskstats", 'r') as diskstats:
+                #print()
+                
+                
             
-            #print()
-        
-        #with open("/proc/diskstats", 'r') as diskstats:
-            #print()
-            
-            
-        
-        time.sleep(refresh_rate)
+            time.sleep(refresh_rate)
+    except KeyboardInterrupt:
+        print("\nMonitoring stopped.")
 
 
 
