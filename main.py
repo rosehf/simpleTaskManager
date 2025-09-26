@@ -11,7 +11,7 @@ RESET = '\033[0m'
 
 # Static Info
 def get_static_info():
-    print(RED + "SYSTEM INFO" + RESET)
+    print(f"{RED}SYSTEM INFO{RESET}")
 
     with open("/proc/cpuinfo", 'r') as file:
         cpuinfo = file.read()
@@ -44,7 +44,7 @@ def monitor():
     prev_proc_cre = 0
 
     print("\n" * 100)  # Clear screen
-    print(RED + "DYNAMIC SYSTEM MONITOR " + RESET)
+    print(f"{RED}DYNAMIC SYSTEM MONITOR {RESET}")
     print("Press Ctrl+C to stop monitoring\n")
 
     print("CPU percentages\n\tUser Mode: \n\tSystem Mode: \n\tIdle: ")
@@ -74,7 +74,6 @@ def monitor():
             print("\033[11B" , end="") # Return cursor to original position
 
             # Context Switches
-
             for line in stat:
                 if line.startswith("ctxt"):
                     ctxt_fields = line.split()
@@ -83,20 +82,25 @@ def monitor():
                     if prev_ctxt_sw != 0:
                         ctxt_switches -= prev_ctxt_sw
                         print("\033[2A" , end="")  # Move cursor up to overwrite previous output
-                        print(f"Context Switches Rate: {GREEN}{ctxt_switches}{RESET}")
+                        print(f"Context Switches Rate: {GREEN}{ctxt_switches/refresh_rate}{RESET}")
                         print("\033[2B" , end="") # Return cursor to original position
                         
-                        
-                    
                     prev_ctxt_sw = int(ctxt_fields[1])
                     break
 
+
+            # Process Creations
             for line in stat:
                 if line.startswith("processes"):
                     proc_fields = line.split()
                     proc_creations = int(proc_fields[1])
                     if prev_proc_cre != 0:
                         proc_creations -= prev_proc_cre
+                        print("\033[1A" , end="")  # Move cursor up to overwrite previous output
+                        print(f"Process Creation Rate: {GREEN}{proc_creations/refresh_rate}{RESET}")
+                        print("\033[1B" , end="") # Return cursor to original position
+
+                    prev_proc_cre = int(proc_fields[1])
                     break
 
             
