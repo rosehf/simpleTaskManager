@@ -1,6 +1,6 @@
 # Cadets Hayden Rose and Siripat Kotipapa
 # CIS 302 - Simple Linux Task Manager
-# Help Recieved: AI for questions about proc files, google for python syntax, Canvas resources 
+# Help Recieved: AI for questions about proc files + general python programing, google for python syntax, Canvas resources 
 
 import time
 import re
@@ -106,18 +106,37 @@ def monitor():
 
                 
 
-            #with open("/proc/meminfo", 'r') as meminfo:
-                
-                #print()
+            with open("/proc/meminfo", 'r') as meminfo:
+                for line in meminfo:
+                    if line.startswith("MemAvailable:"):
+                        mem_fields = line.split()
+                        available_memory = int(mem_fields[1])  # in KB
+                        print("\033[5A" , end="")  # Move cursor up to overwrite previous output
+                        print(f"Memory\n\tAvailable Memory: {GREEN}{available_memory} KB{RESET}\033[K")
+                        print("\033[5B" , end="") # Return cursor to original position
+                        break
             
-            #with open("/proc/diskstats", 'r') as diskstats:
-                #print()
+            with open("/proc/diskstats", 'r') as diskstats:
+                for line in diskstats:
+                    if "sda" in line:  # Assuming 'sda' is the primary disk
+                        disk_fields = line.split()
+                        read_sectors = int(disk_fields[5])
+                        write_sectors = int(disk_fields[9])
+                        
+                        # Assuming 512 bytes per sector
+                        read_bytes = read_sectors * 512
+                        write_bytes = write_sectors * 512
+                        
+                        print("\033[8A" , end="")  # Move cursor up to overwrite previous output
+                        print(f"Disk I/O\n\tRead Rate: {GREEN}{read_bytes/refresh_rate:.2f} B/s{RESET}\n\tWrite Rate: {GREEN}{write_bytes/refresh_rate:.2f} B/s{RESET}\033[K")
+                        print("\033[8B" , end="") # Return cursor to original position
+                        break
                 
                 
             
             time.sleep(refresh_rate)
     except KeyboardInterrupt:
-        print("\nMonitoring stopped.")
+        print("\nMonitoring stopped.") # Nice
 
 
 
