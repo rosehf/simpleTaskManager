@@ -43,7 +43,7 @@ def monitor():
     prev_ctxt_sw = 0
     prev_proc_cre = 0
 
-    print("\n" * 100)  # Clear screen
+    #print("\n" * 100)  # Clear screen
     print(f"{RED}DYNAMIC SYSTEM MONITOR {RESET}")
     print("Press Ctrl+C to stop monitoring\n")
 
@@ -97,7 +97,7 @@ def monitor():
                     if prev_proc_cre != 0:
                         proc_creations -= prev_proc_cre
                         print("\033[1A" , end="")  # Move cursor up to overwrite previous output
-                        print(f"Process Creation Rate: {GREEN}{proc_creations/refresh_rate}{RESET}")
+                        print(f"Process Creation Rate: {GREEN}{proc_creations/refresh_rate:.2   f}{RESET}\033[K")
                         print("\033[1B" , end="") # Return cursor to original position
 
                     prev_proc_cre = int(proc_fields[1])
