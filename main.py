@@ -107,9 +107,9 @@ def monitor():
                 
 
             with open("/proc/meminfo", 'r') as meminfo:
-                available_memory
                 for line in meminfo:
-
+                    total_memory = 1  # Prevent division by zero
+                    available_memory = 0
                     if line.startswith("MemTotal:"):
                         total_fields = line.split()
                         total_memory = int(total_fields[1])
